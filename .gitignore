@@ -3,3 +3,4 @@ touch
 __pycache__
 .gitignore
 */
+.DS_Store
