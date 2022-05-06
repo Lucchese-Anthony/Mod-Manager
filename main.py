@@ -1,3 +1,6 @@
+#!/main.py
+# Written by Anthony Lucchese
+
 import installer
 import scanner
 import os
