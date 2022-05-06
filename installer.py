@@ -1,3 +1,6 @@
+#installer.py
+#Written by Anthony Lucchese
+
 import os
 import shutil
 import scanner
