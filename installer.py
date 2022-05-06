@@ -1,12 +1,20 @@
 import os
 import shutil
+import scanner
+from sys import platform
 
 WINDOWS_OS = "nt"
 MAC_OS = "posix"
 WINDOWS_PATH_1 = "C:/Users/"
 MAC_PATH_1 = "/Users/"
-MINECRAFT_WINDOWS_PATH_2 = "/AppData/Roaming/.minecraft/mods"
+MINECRAFT_WINDOWS_PATH_2 = "/AppData/Roaming/.minecraft"
 MINECTAFT_MAC_PATH_2 = "/Library/Application Support/minecraft"
+
+popularGames = {
+    "minecraftwin32": WINDOWS_PATH_1 + "USER" + MINECRAFT_WINDOWS_PATH_2, 
+    "minecraftdarwin": MAC_PATH_1 + "USER" + MINECTAFT_MAC_PATH_2,
+
+}
 
 def init():
     initPath = os.getcwd() + "/games"
@@ -15,26 +23,24 @@ def init():
         os.mkdir("games")
 
 def newGame():
-    game = str(input("what is the name of the game:> "))
-    mainPath = os.getcwd() + "/games"
-    os.chdir(mainPath)
-    gamePath = f"{mainPath}/{game}"
+    game = str(input("what is the name of the game:> ")).lower()
+    mainGamesFolder = os.getcwd()
+    gamePath = f"{mainGamesFolder}/games/{game}"
     if os.path.isdir(gamePath):
         print("This game already exists!")
         return
     os.mkdir(gamePath)
-    os.chdir(gamePath)
-    modsPath = str(input("what is the path of the mods folder:> "))
-    localModsPath = f"{gamePath}/.path"
-    with open(".path", "w+") as f:
-        f.write(modsPath)
-    files = os.listdir(modsPath)
-    print(f"copying the files from {modsPath} into {localModsPath}")
-    print("the files include:")
-    print("\n".join(files))
-    for file_name in files:
-        shutil.copy2(os.path.join(modsPath, file_name), localModsPath)    
-    os.chdir(mainPath)
+    
+    gameModsFolder = ""
+    if (game + platform) in popularGames:
+        user = os.environ.get("USERNAME")
+        gameModsFolder = popularGames[game + platform].replace("USER", user)
+    else:
+        gameModsFolder = str(input("what is the folder location of the games mod folder? :>"))
+    print("saving mods path...")
+    scanner.createPathFile(gamePath, gameModsFolder)
+    if scanner.checkFolder(gameModsFolder):
+        scanner.copyFiles(gameModsFolder, gamePath)
 
     # add user IO
 def removeGame():
@@ -42,13 +48,13 @@ def removeGame():
     game = str(input("what is the name of the game:> "))
     shutil.rmtree(f"{mainDir}/games/{game}", ignore_errors=True)
     os.chdir(mainDir)
-    print(f"the mods for {game} has been removed...")
+    print(f"the local mods for {game} has been removed, but not the mods installed")
     
 
 def listGames():
     mainPath = os.getcwd()
     if mainPath.split("/")[-1] != "games":
         os.chdir(mainPath + "/games")
-    files = os.listdir()
+    files = os.listdir(mainPath)
     files.remove(".DS_Store")
     print(", ".join(files))
