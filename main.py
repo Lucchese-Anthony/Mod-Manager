@@ -2,8 +2,6 @@ import installer
 import scanner
 import os
 
-
-
 def main():
     installer.init()
     prompt = str(input("What would you like to do (h: help):> "))
