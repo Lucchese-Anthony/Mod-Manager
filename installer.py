@@ -5,6 +5,8 @@ import os
 import shutil
 import scanner
 from sys import platform
+import getpass
+
 
 WINDOWS_OS = "nt"
 MAC_OS = "posix"
@@ -25,39 +27,33 @@ def init():
         print("Creating the /games/ directory...")
         os.mkdir("games")
 
-def newGame():
+def newGame() -> None:
     game = str(input("what is the name of the game:> ")).lower()
     mainGamesFolder = os.getcwd()
     gamePath = f"{mainGamesFolder}/games/{game}"
     if os.path.isdir(gamePath):
         print("This game already exists!")
         return
-    os.mkdir(gamePath)
-    
+    addModsExtension = False
     gameModsFolder = ""
     if (game + platform) in popularGames:
-        user = os.environ.get("USERNAME")
-        gameModsFolder = popularGames[game + platform].replace("USER", user)
+        addModsExtension = True
+        user = getpass.getuser()
+        gameModsFolder = popularGames[game + platform].replace("USER", str(user))
     else:
         gameModsFolder = str(input("what is the folder location of the games mod folder? :>"))
     print("saving mods path...")
-    scanner.createPathFile(gamePath, gameModsFolder)
+    os.mkdir(gamePath)
+    scanner.createPathFile(gamePath, gameModsFolder, addModsExtension)
     if scanner.checkFolder(gameModsFolder):
-        scanner.copyFiles(gameModsFolder, gamePath)
+        scanner.copyFiles(gameModsFolder, gamePath, addModsExtension)
 
     # add user IO
-def removeGame():
+def removeGame(game: str) -> None:
+    """Removes specified game from the available mods"""
+    
     mainDir = os.getcwd()
-    game = str(input("what is the name of the game:> "))
     shutil.rmtree(f"{mainDir}/games/{game}", ignore_errors=True)
     os.chdir(mainDir)
     print(f"the local mods for {game} has been removed, but not the mods installed")
     
-
-def listGames():
-    mainPath = os.getcwd()
-    if mainPath.split("/")[-1] != "games":
-        os.chdir(mainPath + "/games")
-    files = os.listdir(mainPath)
-    files.remove(".DS_Store")
-    print(", ".join(files))

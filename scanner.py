@@ -3,24 +3,23 @@
 
 import os
 import shutil
+from distutils.dir_util import copy_tree
 
-def main():
-    print("hello!")
-
-def copyFiles(fromFolder:str, toFolder:str):
+def copyFiles(fromFolder:str, toFolder:str, addModsExtension:bool):
     print(f"copying the files from {fromFolder} into {toFolder}")
-    if fromFolder.split("/")[-1] != "mods":
+    if fromFolder.split("/")[-1] != "mods" and addModsExtension:
         fromFolder += "/mods"
     print("the files include:")
-    files = os.listdir(fromFolder)
-    print("\n".join(files))
-    for file_name in files:
-        shutil.copy(f"{fromFolder}/{file_name}", toFolder)    
+    print("\n".join(os.listdir(fromFolder)))
+    copy_tree(fromFolder, toFolder)    
 
 def checkFolder(folder:str):
-    return os.path.isdir(folder + "/mods")
+    print(f"{folder} | {os.path.isdir(folder)}")
+    return os.path.isdir(folder)
 
-def createPathFile(folder:str, location:str):
+def createPathFile(folder:str, location:str, addModsExtension:bool):
     with open((folder + "/.path"), "w+") as f:
-        f.write(location + "/mods")
+        if addModsExtension:
+            location += "/mods"
+        f.write(location)
 

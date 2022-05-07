@@ -3,6 +3,7 @@
 
 import installer
 import scanner
+import manager
 import os
 
 def main():
@@ -12,9 +13,16 @@ def main():
         if (prompt == "1"):
             installer.newGame() 
         elif (prompt == "2"):
-            installer.removeGame()
+            game = str(input("what is the name of the game:> ")).lower()
+            installer.removeGame(game)
         elif (prompt == "3"):
-            installer.listGames()
+            manager.listGames()
+        elif (prompt == "4"):
+            game = str(input("what is the name of the game:> ")).lower()
+            manager.pushMods(game)
+        elif (prompt == "5"):
+            game = str(input("what is the name of the game:> ")).lower()
+            manager.pullMods(game)
         elif (prompt == "h"):
             print("0: exit, 1: add new game, 2: remove a game, 3: list games")
         else:
