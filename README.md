@@ -9,3 +9,5 @@ How to use the current program:
     - currently, minecraft is a popular game, so there is a streamlined method that is done overhead
 - type `2` to delete a local mod folder
 - type `3` to list all game mod folders
+- type `4` to push mods to mod folder
+- type `5` pull mods from mod folder
