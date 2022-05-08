@@ -7,9 +7,6 @@ import scanner
 from sys import platform
 import getpass
 
-
-WINDOWS_OS = "nt"
-MAC_OS = "posix"
 WINDOWS_PATH_1 = "C:/Users/"
 MAC_PATH_1 = "/Users/"
 MINECRAFT_WINDOWS_PATH_2 = "/AppData/Roaming/.minecraft"
@@ -27,7 +24,9 @@ def init():
         print("Creating the /games/ directory...")
         os.mkdir("games")
 
-def newGame() -> None:
+def newGame():
+    """Adds a new game"""
+
     game = str(input("what is the name of the game:> ")).lower()
     mainGamesFolder = os.getcwd()
     gamePath = f"{mainGamesFolder}/games/{game}"
@@ -49,10 +48,14 @@ def newGame() -> None:
         scanner.copyFiles(gameModsFolder, gamePath, addModsExtension)
 
     # add user IO
-def removeGame(game: str) -> None:
+def removeGame(game: str):
     """Removes specified game from the available mods"""
     
     mainDir = os.getcwd()
+    listOfFiles = os.listdir()
+    if listOfFiles == []:
+        if str(input("There are files existing in the folder, are you sure you want to delete the folder? (y/n): ")) == "n":
+            return
     shutil.rmtree(f"{mainDir}/games/{game}", ignore_errors=True)
     os.chdir(mainDir)
     print(f"the local mods for {game} has been removed, but not the mods installed")

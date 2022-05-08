@@ -1,6 +1,6 @@
-touch
 *.pyc
 __pycache__
 .gitignore
 */
+!/src
 .DS_Store

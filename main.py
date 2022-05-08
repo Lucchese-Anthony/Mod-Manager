@@ -1,4 +1,4 @@
-#!/main.py
+#!/src/main.py
 # Written by Anthony Lucchese
 
 import installer
@@ -24,7 +24,7 @@ def main():
             game = str(input("what is the name of the game:> ")).lower()
             manager.pullMods(game)
         elif (prompt == "h"):
-            print("0: exit, 1: add new game, 2: remove a game, 3: list games")
+            print("0: exit\n1: add new game\n2: remove a game\n3: list games\n4: push mods to mod folder\n5: pull mods from mod folder")
         else:
             print("incorrect input...")
         prompt = str(input("What would you like to do (h: help):> "))
